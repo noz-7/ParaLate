@@ -1,0 +1,32 @@
+# Secrets & Environment Variables
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+env/
+*.egg-info/
+.pytest_cache/
+
+# Build & Packaging
+build/
+dist/
+release/
+*.spec
+*.spec.bak
+icon.ico
+
+# Logs, Local & Temporary Files
+logs/
+*.log
+klasor_yapisi.txt
+.freebuff/
+
+# IDEs & Editors
+.idea/
+.vscode/

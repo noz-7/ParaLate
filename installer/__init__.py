@@ -1,0 +1,1 @@
+"""ParaLate Windows installer."""
