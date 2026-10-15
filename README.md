@@ -1,110 +1,235 @@
-# ParaLate
+<div align="center">
 
-**ParaLate**, İngilizce (veya herhangi bir dildeki) bir ders PDF'ini **çevrimiçi** olarak sayfa sayfa çeviren, orijinal ve çevrilmiş sayfaları **gerçek biçimde interleave eden** (Orig1, Trans1, Orig2, Trans2, …) tek bir PDF üreten ve bunu **kendi PDF görüntüleyicisinde iki sayfa yan yana** gösteren modern bir masaüstü uygulamasıdır.
+<img src="docs/images/banner.svg" alt="ParaLate: read any PDF side by side with its translation" width="100%">
 
+<br>
+
+<a href="https://github.com/OWNER/ParaLate/releases/latest"><img alt="Download ParaLate for Windows" src="https://img.shields.io/badge/Download-Setup.exe-2EA44F?style=for-the-badge&logo=windows&logoColor=white"></a>
+&nbsp;
+<a href="#-quick-start"><img alt="Quick start" src="https://img.shields.io/badge/Quick%20Start-7C5CFF?style=for-the-badge"></a>
+&nbsp;
+<a href="https://github.com/OWNER/ParaLate/issues"><img alt="Report a bug" src="https://img.shields.io/badge/Report%20a%20bug-D73A4A?style=for-the-badge"></a>
+
+<br><br>
+
+<img alt="Latest release" src="https://img.shields.io/github/v/release/OWNER/ParaLate?style=flat-square&color=7C5CFF">
+<img alt="License: GPL-3.0-only" src="https://img.shields.io/badge/license-GPL--3.0--only-blue?style=flat-square">
+<img alt="Platform: Windows 10/11" src="https://img.shields.io/badge/platform-Windows%2010%2F11-0078D6?style=flat-square&logo=windows&logoColor=white">
+<img alt="Python 3.12" src="https://img.shields.io/badge/python-3.12-3776AB?style=flat-square&logo=python&logoColor=white">
+<img alt="GUI: PyQt6" src="https://img.shields.io/badge/GUI-PyQt6-41CD52?style=flat-square&logo=qt&logoColor=white">
+<img alt="PDF engine: PyMuPDF" src="https://img.shields.io/badge/PDF-PyMuPDF-E8590C?style=flat-square">
+<img alt="95 pytest tests" src="https://img.shields.io/badge/pytest-95%20tests-7C5CFF?style=flat-square">
+<img alt="GitHub stars" src="https://img.shields.io/github/stars/OWNER/ParaLate?style=flat-square&color=F5C542">
+
+<br><br>
+
+<b><a href="#-install">Install</a></b> &nbsp;·&nbsp;
+<b><a href="#-features">Features</a></b> &nbsp;·&nbsp;
+<b><a href="#-how-it-works">How it works</a></b> &nbsp;·&nbsp;
+<b><a href="#-free-vs-premium">Free vs Premium</a></b> &nbsp;·&nbsp;
+<b><a href="#-configuration">Configuration</a></b> &nbsp;·&nbsp;
+<b><a href="#-development">Development</a></b> &nbsp;·&nbsp;
+<b><a href="#-license">License</a></b>
+
+</div>
+
+<br>
+
+**ParaLate** translates a text-based PDF page by page and gives you back **one PDF** in which every original page is followed by its translation (`Orig 1, Trans 1, Orig 2, Trans 2, …`). Its built-in viewer then shows each pair as a **two-page spread**: original on the left, translation on the right, in a single scroll area.
+
+It behaves like the *Page view → Two pages* mode of the Microsoft Edge PDF viewer, but with the translation already sitting next to the source.
+
+> **Built for studying.** ParaLate was created to read English lecture PDFs with a Turkish translation beside them, quickly and comfortably. It works for any language pair supported by its translation providers.
+
+<br>
+
+## ✨ Features
+
+<table>
+  <tr>
+    <td width="33%" valign="top">
+      <h3>📖 True two-page spread</h3>
+      <p>Original left, translation right, one shared scroll area. Zoom, fit, <kbd>Ctrl</kbd>+<kbd>F</kbd> search, clickable links, and real text selection from the PDF's own text layer.</p>
+    </td>
+    <td width="33%" valign="top">
+      <h3>🎨 Layout-preserving pages</h3>
+      <p>Text is redacted from the original page while <b>images and vector art stay</b>. The translation is written back into the same boxes with the source colors, bold and italic carried over.</p>
+    </td>
+    <td width="33%" valign="top">
+      <h3>🔁 Resilient engine</h3>
+      <p>A provider chain with retry, backoff and automatic fallback. It works <b>without any API key</b>, and gets steadier when you add your own.</p>
+    </td>
+  </tr>
+  <tr>
+    <td width="33%" valign="top">
+      <h3>🔐 Encrypted library</h3>
+      <p>Every translated document is stored as an AES-256-GCM encrypted <code>.plt</code> file. Reopen anything from History without translating again.</p>
+    </td>
+    <td width="33%" valign="top">
+      <h3>⚡ Smart caching</h3>
+      <p>The same PDF with the same language pair is never processed twice, and a reused result costs no daily quota. Text blocks are cached too.</p>
+    </td>
+    <td width="33%" valign="top">
+      <h3>🧩 Open and tested</h3>
+      <p>GPL-3.0 source, signed offline licensing, a JSON-based localization layer and a 95-test pytest suite covering PDF, storage, quota, licensing and GUI.</p>
+    </td>
+  </tr>
+</table>
+
+<details>
+<summary><b>Everything else that is included</b></summary>
+
+<br>
+
+- **Code stays code.** Monospace and code blocks, math, bare URLs and e-mail addresses are detected and left untranslated.
+- **Fails safely.** If a page cannot be rendered, ParaLate falls back to an untouched copy of the original page instead of breaking the document. A failed or cancelled job never leaves a half-written document behind, and it gives the quota back.
+- **Background work.** Long jobs run on Qt worker threads, so the interface never freezes. Progress, current stage and error codes are shown.
+- **History.** Every finished translation is listed with file name, language pair, page count and last-opened date. Open, delete one, or clear all.
+- **Tabbed viewer.** Opening a document that is already open switches to its tab instead of loading it twice.
+- **Dark UI.** A full dark theme, a first-run language chooser (Türkçe / English) and JSON-based localization (`localization/tr.json`, `localization/en.json`).
+- **Safe by default.** API keys live in environment variables, `.env` or the OS keyring, are masked in logs, and are never written to the config file.
+- **Rotating logs.** `logs/paralate.log` with a redaction filter.
+
+</details>
+
+<br>
+
+## 📥 Install
+
+### Windows (recommended)
+
+1. Download **`Setup.exe`** from the [latest release](https://github.com/OWNER/ParaLate/releases/latest).
+2. Run it and pick the installer language: **English, Türkçe, Русский or Français**.
+3. Review and accept the license notices. The full GPL and AGPL texts are shown in their original English.
+4. ParaLate installs into your user account and adds **Start menu and desktop shortcuts** plus an entry in *Apps & features*.
+
+Uninstalling **keeps your documents and settings**. Delete the data folder yourself if you want them gone (see [Where data lives](#where-data-lives)).
+
+> [!NOTE]
+> `Setup.exe` is currently **not Authenticode-signed**, so Windows SmartScreen may show a warning. Compare the file's SHA-256 hash with the one published in the release notes before running it:
+> ```powershell
+> Get-FileHash .\Setup.exe -Algorithm SHA256
+> ```
+
+**Requirements:** Windows 10 or 11 (x64) and an internet connection for translating.
+
+### Linux and from source
+
+There is no Linux installer. You can run ParaLate from source, see [Development](#-development).
+
+<br>
+
+## 🚀 Quick Start
+
+1. **Launch ParaLate.** On first run, choose the interface language.
+2. **Select a PDF.** The file structure and page count are checked before anything is translated.
+3. **Choose the languages.** The source language can be *Auto*.
+4. **Click Translate.** You see progress, the current stage, and clear error messages if something goes wrong.
+5. **Read.** The viewer opens the interleaved PDF as a two-page spread.
+
+| In the viewer | What it does |
+|---|---|
+| Drag with the mouse | Select text from the real PDF text layer |
+| Double-click | Select a word |
+| <kbd>Ctrl</kbd>+<kbd>C</kbd> | Copy the selection |
+| <kbd>Ctrl</kbd>+<kbd>F</kbd> | Search the document |
+| Zoom and fit shortcuts | Scale the spread |
+| Links | `http`, `https` and `mailto` links open safely |
+
+> [!IMPORTANT]
+> ParaLate reads the PDF's **real text layer**. Scanned or image-only PDFs are not supported, because there is **no OCR** and no offline AI translation.
+
+<br>
+
+## 💎 Free vs Premium
+
+| | FREE | PREMIUM |
+|---|:---:|:---:|
+| New PDF translations | 3 per calendar day | No daily limit |
+| Pages per PDF | Up to 30 | No page limit |
+| Reopen saved translations offline | ❌ internet required | ✅ |
+| Download the translated PDF | ❌ | ✅ |
+| Re-open an already translated PDF + language pair | ✅ no quota used | ✅ |
+| Upgrade prompt | When a viewer tab opens, then every 7 minutes after you dismiss it | None |
+| Ad slot | Present | Hidden |
+
+- Deleting documents or clearing History does **not** restore the daily quota.
+- A job that fails or is cancelled before producing a document gives its quota back.
+- Translating a *new* PDF needs an internet connection on both plans.
+
+**Getting Premium.** Activation keys are issued manually. Contact me on [Telegram](https://t.me/NOZ_7_T) or by [e-mail](mailto:yorulmazoguzhan306@gmail.com). A key is a time-limited, digitally signed code (from 7 days to 1 year) that the app verifies **offline**.
+
+<br>
+
+## 🧠 How It Works
+
+<div align="center">
+<img src="docs/images/spread.svg" alt="Interleaved PDF pages shown as a two-page spread in the ParaLate viewer" width="100%">
+</div>
+
+<br>
+
+Every new translation runs this pipeline on a worker thread:
+
+```mermaid
+flowchart LR
+    A["Source PDF"] --> B["SHA-256 fingerprint"]
+    B --> C{"Same PDF + language<br/>already translated?"}
+    C -- "yes (no quota used)" --> H
+    C -- no --> D["Quota check<br/>FREE: 3/day, 30 pages"]
+    D --> E["Extract text blocks<br/>skip code, math, URLs"]
+    E --> F["Translate<br/>provider chain + cache"]
+    F --> G["Redact original text<br/>re-draw translation"]
+    G --> I["Interleave<br/>Orig 1, Trans 1, Orig 2, ..."]
+    I --> J[("AES-256-GCM<br/>encrypted .plt")]
+    J --> H["ParaLate Viewer<br/>two-page spread"]
 ```
-SOL (Orijinal)            SAĞ (Çeviri)
-─────────────             ──────────────
-Sayfa 1                   Sayfa 2
-Sayfa 3                   Sayfa 4
-Sayfa 5                   Sayfa 6
-```
 
-Davranış, Microsoft Edge PDF görüntüleyicisindeki **Sayfa görünümü → İki sayfa** modu ile aynıdır: tek sayfa değil, **çift sayfa (spread)** halinde, eşit hizalı, kaydırılabilir, zoom yapılabilir.
+<details>
+<summary><b>Page rendering details</b></summary>
 
-> **Temel amaç:** *İngilizce ders PDF'sini Türkçe çeviriyle yan yana, hızlı, stabil ve rahat şekilde okumak.*
+<br>
 
----
+- **Extraction.** PyMuPDF's `get_text("dict")` provides bounding boxes, text, font size and family, bold/italic flags, color, line count and spacing, and alignment for every span. The body font is estimated from the character-weighted median font size.
+- **Classification.** Blocks are labeled `HEADING`, `BODY`, `CODE`, `MATH` or `SKIP`. Only headings and body text are translated.
+- **Redaction.** The original text is removed with PyMuPDF redaction configured so that **images and vector drawings are not touched**.
+- **Fitting.** The translation is drawn into the original text box. If it does not fit, the font shrinks step by step (down to 6 pt), the box may grow into free neighboring space, and as a last resort the readable part is drawn and a warning is logged.
+- **Fonts.** Base-14 `helv` breaks Turkish glyphs, so ParaLate uses a system TrueType font: Segoe UI on Windows, DejaVu or Liberation on Linux.
+- **Annotations.** Highlights and underlines stay on the untouched original page. Style transfer to the translated text (color, bold, italic) is proportional and approximate, not word-for-word.
 
-## Özellikler
+</details>
 
-- **Gerçek interleave PDF**: Her orijinal sayfanın ardından çevirisi gelir (Orig1, Trans1, Orig2, Trans2, …). Tek PDF, tek dosya.
-- **Kendi PDF görüntüleyicisi**: Orijinal solda, çeviri sağda; gerçek PDF metin katmanından kelime seçimi/kopyalama, sayfa sayfa gezinme, Ctrl+ yakınlaştırma, Ctrl+F arama ve tıklanabilir bağlantılar.
-- **Online çeviri, OCR yok, offline AI yok**: Sağlayıcı zinciri `google → mymemory → microsoft → libretranslate`; hata/limit durumunda otomatik fallback, deneme + backoff.
-- **Koruyucu çeviri sayfası üretimi**: Orijinal sayfanın metni redaction ile silinirken **görseller ve vektör çizimler korunur**; çeviride metnin span renkleri, kalın/italik stilleri ve PDF'deki highlight/altı çizili/üstü çizili çizimler korunur. Çeviri, Türkçe destekli sistem fontuyla (Segoe UI / DejaVu) aynı yerleşime yeniden yazılır. Kod/monospace blokları olduğu gibi bırakılır.
-- **Şifreli belge deposu (`.plt`)**: Tüm belgeler AES ile şifrelenir; anahtar OS keyring + dosya kombinasyonuyla korunur.
-- **Ücretsiz / Premium**: FREE = günde **3 PDF çevirisi**, PDF başına **30 sayfa**; silme kota geri **yüklemez**; FREE internet ister, **PREMIUM çevrimdışı açabilir** (indirilmiş/önbellekli belgeler). Premium imzalı aktivasyonla açılır; PDF indirme Premium özelliğidir.
-- **Zamanlı Premium tanıtımı**: Ücretsiz kullanıcı PDF açınca ve oturum sırasında her 7 dakikada bir gösterilir; kapatıldığında görüntüleme sürer.
-- **Çeviri + belge önbelleği**: Aynı PDF + dil çifti tekrar işlenmez ("yeniden kullanıldı").
-- **Geçmiş**: Tüm çeviriler listelenir, tekrar açılır, silinir.
-- **İlk çalıştırma dil seçimi** (Türkçe/English), tam koyu arayüz, yerelleştirme JSON tabanlı (`localization/tr.json`, `localization/en.json`).
-- **Reklam soyutlaması**: Sağlayıcı arayüzü + yöneticisi; Premium'da devre dışı.
-- **Güvenlik**: API anahtarları `.env`/keyring'de, asla loglanmaz (`RedactionFilter`), config'e yazılmaz.
-- **Loglama**: dönen dosya (`logs/paralate.log`), kırmızı-aksiyon filtresi.
-- **Testler**: PDF, depolama, kota, lisans ve GUI regresyon testleri (`pytest`).
+<details>
+<summary><b>Translation engine details</b></summary>
 
-## Lisans ve yeniden dağıtım
+<br>
 
-ParaLate'in özgün uygulama kaynak kodu © 2026 Oğuzhan YORULMAZ / NOZ-7
-Software'dir ve kök dizindeki [`LICENSE`](./LICENSE) dosyasında bulunan
-GPL-3.0-only lisansı altında sunulur. Hak sahibi, yalnızca ParaLate'e ait
-kod için GPL lisansından ayrı ticari/kapalı kaynak lisansını e-posta üzerinden
-görüşebilir: [yorulmazoguzhan306@gmail.com](mailto:yorulmazoguzhan306@gmail.com).
-Bu ayrı lisans üçüncü taraf yazılımlarının haklarını kapsamaz.
+| Constant (`app/constants.py`) | Value |
+|---|---|
+| `PROVIDER_ORDER` | `google → mymemory → microsoft → libretranslate` |
+| `TRANSLATE_MAX_CHARS` | 3500 characters per chunk (longer text is split by sentence or section) |
+| `TRANSLATE_RETRY_ATTEMPTS` | 2 extra tries on transient errors |
+| `TRANSLATE_RETRY_BACKOFF` | 0.75 s base, exponential |
+| `TRANSLATE_HTTP_TIMEOUT` | 20 s |
 
-Mevcut Windows derlemesi PyMuPDF'i (AGPL-3.0 veya Artifex ticari lisansı),
-PyQt6'yı (GPL-3.0) ve Qt bileşenlerini (bileşene göre LGPL/GPL) içerir.
-Dolayısıyla bu bağımlılıklarla oluşturulan birleşik açık kaynak dağıtımı
-üçüncü taraf koşullarına, özellikle AGPL-3.0'a uymalıdır. Kapalı kaynak/
-ticari dağıtım için ParaLate koduna ek olarak PyQt6 ve PyMuPDF dahil gerekli
-üçüncü taraf ticari izinler de alınmalıdır. Lisans metinleri, paket envanteri
-ve kaynak konumları dağıtım klasöründeki `ThirdPartyLicenses` ve `Source`
-alt klasörlerinde bulunur. Bu özet hukuki danışmanlık değildir.
+</details>
 
----
+<br>
 
-## Gereksinimler
+## 🔑 Configuration
 
-| | Windows | Linux |
-|---|---|---|
-| Python | 3.12+ | 3.12+ (python3.12) |
-| GUI | Qt6 (pip ile gelir) | `libgl1 libegl1 libxkbcommon0 libdbus-1-3` vb. (headless ise `QT_QPA_PLATFORM=offscreen`) |
-| Fontlar | Sistem fontları hazır (Segoe UI/Arial) | `fonts-dejavu` veya `fonts-liberation` |
+ParaLate **works without any API key**: it tries the public Google Translate endpoint first and falls back to MyMemory if that is rejected. Add keys for steadier, higher-quality providers.
 
----
-
-## Kurulum
-
-### Windows (Git Bash / PowerShell)
+| # | Provider | Variables | Notes |
+|:-:|---|---|---|
+| 1 | **Google** | `GOOGLE_TRANSLATE_API_KEY` *(optional)* | Without a key it uses a public endpoint that can return `429` and then falls through. With a key it uses [Cloud Translation v2](https://console.cloud.google.com/apis/credentials). |
+| 2 | **MyMemory** | none | Keyless fallback. Good on sentences, weaker on isolated words. |
+| 3 | **Microsoft** | `MICROSOFT_TRANSLATOR_API_KEY`, `MICROSOFT_TRANSLATOR_REGION` | [Azure Translator](https://azure.microsoft.com/free/azure-ai-translator). Key and region required. |
+| 4 | **LibreTranslate** | `LIBRETRANSLATE_URL`, `LIBRETRANSLATE_API_KEY` *(optional)* | Your own server or [portal.libretranslate.com](https://portal.libretranslate.com). |
 
 ```bash
-# Python 3.12 kurulu değilse:
-winget install --id Python.Python.3.12
-
-# Sanal ortam + bağımlılıklar
-python -m venv .venv
-source .venv/Scripts/activate      # PowerShell: .venv\Scripts\Activate.ps1
-pip install -r requirements-dev.txt
+cp .env.example .env      # Windows PowerShell: Copy-Item .env.example .env
 ```
-
-### Linux (Debian/Ubuntu örneği)
-
-```bash
-sudo apt install python3.12 python3.12-venv \
-     libgl1 libegl1 libxkbcommon0 libdbus-1-3 fonts-dejavu
-
-python3.12 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements-dev.txt
-```
-
----
-
-## API Key Kurulumu
-
-Uygulama **anahtarsız da çalışır**: önce genel Google Translate ucuna, o reddederse **MyMemory**'ye düşer. Anahtar verirseniz daha stabil/ileri sağlayıcılar kullanılır.
-
-1. Şablonu kopyalayın: `cp .env.example .env`
-2. Kullanmak istediğiniz sağlayıcının anahtarını girin:
-
-| Ortam değişkeni | Sağlayıcı | Nereden alınır |
-|---|---|---|
-| `GOOGLE_TRANSLATE_API_KEY` | Google Cloud Translation v2 | https://console.cloud.google.com/apis/credentials |
-| `MICROSOFT_TRANSLATOR_API_KEY` + `MICROSOFT_TRANSLATOR_REGION` | Azure Translator | https://azure.microsoft.com/free/azure-ai-translator |
-| `LIBRETRANSLATE_URL` + `LIBRETRANSLATE_API_KEY` | LibreTranslate | Kendi sunucunuz veya portal.libretranslate.com |
-| — | MyMemory | Anahtar gerektirmez (otomatik fallback) |
-
-`.env` örneği:
 
 ```dotenv
 GOOGLE_TRANSLATE_API_KEY=AIza...
@@ -114,98 +239,113 @@ LIBRETRANSLATE_URL=https://libretranslate.example.com
 LIBRETRANSLATE_API_KEY=xxxxxxxx
 ```
 
-> Anahtarlar `.env` dosyasından okunur (`python-dotenv`), ortam değişkeni varsa ona öncelik verilir; ayrıca **OS keyring**'e yazılabilir. Loglarda anahtar değerleri `***` ile maskelenir. `.env` asla commit edilmez (`.gitignore` içinde).
+Keys are read with `python-dotenv`. A real environment variable wins over `.env`, and keys can also be stored in the **OS keyring**. They are masked as `***` in logs. `.env` is git-ignored: never commit it, and never embed real keys in a build.
 
-### Sağlayıcı zinciri
+### Where data lives
 
-`app/constants.py → PROVIDER_ORDER`:
+| OS | Location |
+|---|---|
+| Windows | `%APPDATA%\ParaLate\` |
+| Linux | `~/.local/share/paralate/` |
+| Override | `PARA_LATE_DATA_DIR=/some/path` |
 
-1. **google** — anahtarsız genel uç; 429/limit olabilir → düşer.
-2. **mymemory** — anahtarsız, cümlende iyi.
-3. **microsoft** — anahtar + bölge gerekli.
-4. **libretranslate** — URL (+isteğe bağlı anahtar) gerekli.
+The folder holds `config/`, `database/` (SQLite), `documents/` (encrypted `.plt` files), `cache/`, `logs/` and `temp/` (cleaned on start and exit).
 
----
+<br>
 
-## Çalıştırma
+## 🧑‍💻 Development
+
+**Requirements:** Python 3.12+.
+
+<details open>
+<summary><b>Windows (PowerShell)</b></summary>
+
+```powershell
+winget install --id Python.Python.3.12      # if Python 3.12 is not installed
+
+git clone https://github.com/OWNER/ParaLate.git
+cd ParaLate
+
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+pip install -r requirements-dev.txt
+
+.venv\Scripts\python.exe main.py
+```
+
+</details>
+
+<details>
+<summary><b>Linux (Debian / Ubuntu example)</b></summary>
 
 ```bash
-# Windows
-.venv/Scripts/python.exe main.py
+sudo apt install python3.12 python3.12-venv \
+     libgl1 libegl1 libxkbcommon0 libdbus-1-3 fonts-dejavu
 
-# Linux
+git clone https://github.com/OWNER/ParaLate.git
+cd ParaLate
+
+python3.12 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements-dev.txt
+
 .venv/bin/python main.py
 ```
 
-İlk açılışta **dil seçimi** penceresi gelir; ardından ana pencere açılır. PDF seç → hedef dil → Çevir; işlem bitince **ParaLate Viewer** interleave PDF'i iki sayfa yan yana gösterir.
+On a headless machine set `QT_QPA_PLATFORM=offscreen`. Application windows stay invisible in that mode, so use it for tests only.
 
-Veri dizini (config, SQLite, şifreli belgeler, loglar, önbellek):
+</details>
 
-- Windows: `%APPDATA%\ParaLate\`
-- Linux: `~/.local/share/paralate/`
-- Geçersiz kılmak için: `PARA_LATE_DATA_DIR=/tmp/pl python main.py`
-
-### Testler
+### Tests
 
 ```bash
-QT_QPA_PLATFORM=offscreen python -m pytest        # Windows: set QT_QPA_PLATFORM=offscreen
+QT_QPA_PLATFORM=offscreen python -m pytest      # Windows cmd: set QT_QPA_PLATFORM=offscreen
 ```
 
-GUI testleri offscreen koşar; ekran gerekmez.
+GUI tests run offscreen, so no display is needed.
 
-### Geliştirme / Premium denemesi
+<details>
+<summary><b>What the 95 tests cover</b></summary>
 
-### Çevrimdışı Premium lisans üretimi
+<br>
 
-Lisans biçimi üç CRC32 kontrol alanı ve bunları doğrulayan Ed25519 imzasından oluşur:
-`XXXXXXXX-XXXXXXXX-XXXXXXXX-<128 hex imza>`. Uygulama yalnızca açık doğrulama anahtarını içerir; imzalama anahtarı kaynak koda veya uygulama paketine konmaz.
+| File | Tests | Focus |
+|---|:-:|---|
+| `test_licenses.py` | 20 | CRC fields, signature, dates, durations, clock checks |
+| `test_limits.py` | 17 | Daily quota, page limit, reset and refund |
+| `test_pdf.py` | 17 | Extraction, classification, rendering, redaction |
+| `test_storage.py` | 14 | Document CRUD, encrypted store, cache |
+| `test_translation.py` | 10 | Providers, chunking, fallback, retry, cache |
+| `test_gui_smoke.py` | 6 | Offscreen windows, viewer, promo timer, setup flow |
+| `test_interleave.py` | 6 | Page order, link preservation |
+| `test_hashing.py` | 5 | SHA-256 and cache keys |
 
-Windows'ta bu geliştirme ortamı için imzalama anahtarı `%APPDATA%\ParaLate\issuer\issuer_ed25519_private.pem` konumunda tutulur. Anahtarı gizli ve yedekli tutun; kaybedilirse yeni açık anahtar ile yeni bir uygulama dağıtımı gerekir. Lisans üretimi:
+Counts reflect the source at the time of writing. `tools/test_premium_key_generator.py` adds 4 more tests and is run separately.
 
-```powershell
-.venv\Scripts\python.exe -m licensing.issue_license `
-  --key "$env:APPDATA\ParaLate\issuer\issuer_ed25519_private.pem" `
-  --duration 1ay
-```
+</details>
 
-Desteklenen süreler `7gün`, `14gün`, `1ay`, `3ay`, `6ay`, `1yıl`; başlangıç tarihini sabitlemek için isteğe bağlı `--start YYYY-MM-DD` kullanın. Bitiş tarihi lisansın geçerli olmadığı ilk gündür; başlangıç tarihi gelecekteyse Premium o tarihte etkinleşir. Üretim aracı özel anahtarı hiçbir zaman ekrana yazmaz; yalnızca oluşturduğu aktivasyon kodunu verir. Uygulama sistem tarihi ilerlediğinde son görülen tarihi kaydederek saat geri alma girişimini tespit etmeye çalışır. Tamamen çevrimdışı ve saldırganın yerel veritabanı/saati değiştirebildiği bir ortamda bu önlem kesin değildir. Belgeleri paylaşma özelliği uygulamada bulunmadığından Premium avantajı olarak sunulmaz.
+<br>
 
----
-
-## Windows dağıtım paketi
-
-Windows kurulum dosyasını ve lisans/kaynak eşlikçilerini üretmek için:
+## 📦 Build the Windows Installer
 
 ```powershell
 .venv\Scripts\python.exe -m pip install -r requirements-dev.txt
 .venv\Scripts\python.exe scripts\build_release.py
 ```
 
-Dağıtım klasörü `release` olur. Kökünde yalnızca `Setup.exe`,
-`Source` ve `ThirdPartyLicenses` klasörleri bulunur. Kullanıcı `Setup.exe`'yi
-çalıştırınca önce Türkçe, İngilizce, Rusça veya Fransızca kurulum dilini seçer;
-lisans bildiriminin açıklayıcı bölümü seçilen dilde, GPL/AGPL'in resmi tam
-metinleri özgün İngilizce metinleriyle gösterilir. Bildirimleri kabul ederek
-uygulamayı kullanıcı hesabına kurar; Başlat menüsüne ve masaüstüne kısayol eklenir. Windows uygulama
-listesinde kaldırma girdisi ve ParaLate simgesi kaydedilir. Kaldırma işlemi
-kullanıcı belgelerini ve ayarlarını korur. Kaynak klasörü aynı sürümün
-uygulama kaynaklarını ve bağımlılık kilidini içerir.
+The script converts `icon.png` into a multi-size `icon.ico`, builds the app with PyInstaller (`ParaLate.spec`), packs the app payload and license texts into a single `Setup.exe` (`installer/Setup.spec`), and writes the matching source snapshot and third-party license inventory. The `release` folder it produces contains exactly:
 
-Sürüm, simge, PyInstaller spec'i veya bağımlılıklar değiştirildikten sonra
-paket yeniden oluşturulmalıdır. `PyInstaller` derleme bağımlılığı
-`requirements-dev.txt` içinde yer alır.
+```
+release/
+├── Setup.exe
+├── Source/                  # source snapshot + SOURCE_CODE.md
+└── ThirdPartyLicenses/      # license texts + package inventory
+```
 
-### Premium anahtarı üretimi
+Rebuild the package whenever the version, icon, spec file or dependencies change.
 
-Windows'ta [`tools`](./tools) içindeki `generate_premium_key.py` aracı başlangıç
-tarihini ve süreyi sorar, anahtarı mevcut imzalama anahtarıyla üretir ve
-uygulamanın açık anahtarıyla doğrular. Kullanıcıya hazır kopya
-`C:\Users\<kullanıcı>\Projeler\Paralate Generator` klasörüne konur.
-İmzalama anahtarı `%APPDATA%\ParaLate\issuer` içinde tutulur ve araca
-kopyalanmaz. Uygulama başlangıç tarihini aktivasyon gününün ±2 günüyle
-sınırladığı için üretici de bu aralığın dışındaki tarihleri reddeder.
-
-## Linux Build (PyInstaller → `ParaLate`)
+<details>
+<summary><b>Linux build (experimental)</b></summary>
 
 ```bash
 .venv/bin/python -m PyInstaller --noconfirm --windowed \
@@ -215,119 +355,200 @@ sınırladığı için üretici de bu aralığın dışındaki tarihleri reddede
   main.py
 ```
 
-Çıktı: `dist/ParaLate/ParaLate`. Not: `--add-data` ayraçları platforma özgüdür — Windows'ta `;`, Linux'ta `:` kullanır.
+Output: `dist/ParaLate/ParaLate`. The `--add-data` separator is platform specific: `;` on Windows, `:` on Linux.
 
----
+</details>
 
-## Proje Yapısı
+<br>
+
+## 🧱 Project Structure
+
+<details>
+<summary><b>Show the source tree</b></summary>
 
 ```
-Paralate-free/
-├── main.py                     # Giriş noktası
-├── requirements.txt            # Runtime bağımlılıkları
-├── requirements-dev.txt        # + pytest, pyinstaller
+ParaLate/
+├── main.py                       # entry point
+├── ParaLate.spec                 # PyInstaller spec for the app
+├── requirements.txt              # runtime dependencies
+├── requirements-dev.txt          # + pytest, PyInstaller
+├── requirements-lock-windows.txt # pinned Windows dependency set
 ├── pytest.ini
-├── .env.example                # API key şablonu
+├── .env.example                  # API key template
+├── icon.ico / icon.png
 │
-├── app/                        # Bootstrap & genel ayarlar
-│   ├── application.py          # Başlangıç sırası, servisler, logging, first-run
-│   ├── config.py               # config.json (ui_language, first_run_completed, …)
-│   ├── constants.py            # Tüm sabitler (limitler, dil listesi, viewer ayarları)
-│   ├── network.py              # NetworkStatus (çevrimiçi/çevrimdışı algılama)
-│   └── services.py             # AppServices dataclass (tek bağımlılık taşıyıcı)
+├── app/                          # bootstrap and global settings
+│   ├── application.py            # startup order, services, logging, first run
+│   ├── config.py                 # user settings (language, first run, ...)
+│   ├── constants.py              # limits, language list, viewer settings
+│   ├── network.py                # online / offline detection
+│   └── services.py               # AppServices: single dependency carrier
 │
-├── pdf/                        # PDF çekirdeği
-│   ├── extractor.py            # Metin bloğu/paragraf çıkarma, kod bloğu algılama
-│   ├── renderer.py             # Türkçe destekli TTF font, wrap, satır çizimi
-│   ├── translator_renderer.py  # Redaction tabanlı çeviri sayfası (görsel/vektör korumalı)
-│   ├── interleaver.py          # Orig1,Trans1,Orig2,Trans2 … birleştirme
-│   ├── loader.py               # Bellekten PDF açma/yükleme
-│   └── metadata.py             # font subset + sıkıştırma (boyut optimizasyonu)
+├── pdf/                          # PDF core
+│   ├── extractor.py              # text blocks, spans, classification
+│   ├── renderer.py               # font loading, wrapping, fitting
+│   ├── translator_renderer.py    # redaction-based translated page
+│   ├── interleaver.py            # Orig1, Trans1, Orig2, Trans2, ...
+│   ├── loader.py                 # safe PDF open and error mapping
+│   └── metadata.py               # metadata and PDF serialization
 │
-├── translation/                # Çeviri katmanı
-│   ├── base.py                 # TranslationProvider arayüzü, TranslationCancelled
-│   ├── manager.py              # Zincir, retry/backoff, chunking, build_default_providers()
-│   ├── google.py               # Google (anahtar opsiyonel)
-│   ├── mymemory.py             # MyMemory (anahtarsız çalışan fallback)
-│   ├── microsoft.py            # Azure Translator (anahtar+bölge)
-│   ├── libretranslate.py       # LibreTranslate (URL+anahtar)
-│   └── cache.py                # Çeviri önbelleği (SQLite)
+├── translation/                  # translation layer
+│   ├── base.py                   # provider interface, errors, cancel
+│   ├── manager.py                # chain, retry/backoff, chunking
+│   ├── google.py  mymemory.py  microsoft.py  libretranslate.py
+│   └── cache.py                  # SQLite translation cache
 │
-├── storage/                    # Kalıcı depolama
-│   ├── paths.py                # AppData/XDG yolları, PARA_LATE_DATA_DIR
-│   ├── database.py             # SQLite şema (documents, daily_usage, cache, state)
-│   ├── models.py               # Belge/kota/lisans veri sınıfları
-│   ├── repository.py           # CRUD, cleanup_incomplete, find_by_cache_key
-│   └── encrypted_document.py   # .plt okuma/yazma (AES, magic+header)
+├── storage/                      # persistence
+│   ├── paths.py                  # AppData / XDG paths
+│   ├── database.py               # SQLite schema
+│   ├── models.py                 # document, quota and license models
+│   ├── repository.py             # CRUD API
+│   └── encrypted_document.py     # .plt read/write (AES-GCM, atomic replace)
 │
-├── security/                   # Kripto & sırlar
-│   ├── encryption.py           # DocumentCipher (master key, keyring+dosya)
-│   ├── hashing.py              # Belge parmak izi (önbellek anahtarı)
-│   └── secrets.py              # .env/keyring okuma, maskeleme
+├── security/                     # crypto and secrets
+│   ├── encryption.py             # AES-256-GCM, keyring + file master key
+│   ├── hashing.py                # document fingerprint, cache key
+│   └── secrets.py                # .env / keyring access, masking
 │
-├── licensing/                  # FREE/PREMIUM
-│   ├── base.py                 # LicenseProvider arayüzü, LicenseError
-│   ├── license_manager.py      # İmzalı çevrimdışı lisans, süre ve saat kontrolü
-│   ├── offline_provider.py     # CRC32 alanları + Ed25519 doğrulaması
-│   ├── issue_license.py        # Harici özel anahtarla lisans üretim aracı
-│   └── limits.py               # QuotaService (3 çeviri/gün, 30 sayfa/dosya)
+├── licensing/                    # FREE / PREMIUM
+│   ├── base.py  offline_provider.py  license_manager.py
+│   ├── public_key.py             # verification key only
+│   ├── issue_license.py          # issuer CLI (needs a private key you keep)
+│   └── limits.py                 # QuotaService
 │
-├── ads/                        # Reklam soyutlaması (arayüz + yönetici)
+├── ads/                          # ad-slot abstraction (no ad network wired)
+├── workers/                      # QThread workers
+│   ├── translation_worker.py     # the full translation pipeline
+│   ├── pdf_worker.py             # load saved documents
+│   └── license_worker.py         # activation off the GUI thread
 │
-├── workers/                    # QThread işçileri
-│   ├── translation_worker.py   # hash→cache→quota→extract→translate→render→interleave→encrypt→store
-│   └── pdf_worker.py           # Belge listesi/yükleme işleri
+├── ui/                           # PyQt6 interface (dark theme)
+│   ├── home_window.py  history_widget.py  translation_window.py
+│   ├── pdf_viewer.py             # ViewerWindow + SpreadCanvas
+│   ├── language_dialog.py  style.py  ad_banner.py
+│   └── dialogs/                  # premium_dialog.py, premium_promo.py
 │
-├── ui/                         # PyQt6 arayüzü (koyu tema)
-│   ├── style.py                 # APP_QSS (tam koyu stil)
-│   ├── language_dialog.py       # FirstRunDialog (ilk açılış dil seçimi)
-│   ├── home_window.py           # Ana pencere: PDF seç, çevir, durum
-│   ├── history_widget.py        # Geçmiş listesi (aç/sil)
-│   ├── translation_window.py    # İşlem ilerleme penceresi
-│   ├── pdf_viewer.py            # ViewerWindow + SpreadCanvas (iki sayfa) + Ctrl+F + zoom
-│   ├── ad_banner.py             # Reklam alanı (FREE)
-│   └── dialogs/premium_dialog.py# Premium tanıtım + lisans aktivasyonu + Download kapısı
-│
-├── localization/
-│   ├── tr.json / en.json        # Tüm UI metinleri + hata kodları
-│
-└── tests/
-    ├── conftest.py              # make_pdf(), app_paths/db/quota/services fixture'ları
-    ├── test_hashing.py
-    ├── test_storage.py          # CRUD, cleanup, cache
-    ├── test_limits.py           # QuotaService: reset/refund, saat geri alma
-    ├── test_interleave.py       # Orig/Trans sırası, link yaşatma
-    ├── test_pdf.py              # Extractor, renderer (Türkçe glyph), redaction
-    ├── test_translation.py      # Zincir, fallback, cache, chunking
-    ├── test_licenses.py         # CRC32, imza, tarih ve saat kontrolü
-    └── test_gui_smoke.py        # Offscreen GUI, seçim, tanıtım
+├── localization/                 # tr.json, en.json
+├── installer/                    # Setup app, Setup.spec, license texts
+├── scripts/                      # build_release.py
+├── tools/                        # premium key generator and its docs
+├── tests/                        # pytest suite
+└── docs/images/                  # README artwork
 ```
 
----
+</details>
 
-## Mimari Notlar
+<br>
 
-- **İşlem hattı** (`workers/translation_worker.py`): belge hash → önbellek kontrolü → kota düşümü → metin çıkarma → blok bazlı çeviri (kod blokları atlanır) → çeviri sayfası üretimi → interleave → `.plt` şifreleyip depolama. Hata olursa kota **geri iade edilir**, yarım belge temizlenir.
-- **Çeviri sayfası stratejisi**: PyMuPDF redaction (`apply_redactions` görseller/vektör sanatı **silmeden**) ile orijinal metin kaldırılır, kalan tuval üzerine çeviri Türkçe fontla yazılır; render hatasında **bozulmamış kopyaya** düşülür.
-- **Font**: Base-14 `helv` Türkçe glyph'leri bozar → sistem TTF zorunlu (Windows: Segoe UI, Linux: DejaVu/Liberation). `insert_textbox` taşmada hiçbir şey yazmaz → manuel word-wrap + kademeli boyut küçültme.
-- **Kota sıfırlama**: Yalnızca kayıtlı gün **bugünden kesin önceyse** sıfırlanır (saat geri alma kota geri getirmez). Silme iade yapmaz.
-- **Çökme direnci**: Viewer kapatılırken `begin_shutdown()` → pixmap/link/arama temizlenir → `doc.close()`; `sizeHint` önbellekli sayfa sayısını kullanır (kapalı döküman hatası yok).
-- **Qt6 tuzakları** (çözülmüş): `QStandardKey` yok → `QKeySequence.StandardKey.*`; `QTimer.singleShot` yalnız `(msec, slot)`.
+## 🔐 Security and Privacy
 
----
+> [!IMPORTANT]
+> **Your document text is sent to the translation provider** you use (Google, MyMemory, Azure or LibreTranslate), because translation is online. Do not translate confidential documents through services you do not trust. A self-hosted LibreTranslate server keeps text on your own infrastructure.
 
-## Bilinen Sınırlamalar
+- **Encrypted at rest.** Documents are stored as AES-256-GCM `.plt` files with a random 12-byte nonce per file and an authenticated header. The decrypted PDF exists only in memory for the viewer. Writes go to a temporary file first and are swapped in atomically.
+- **Key handling.** The master key comes from the OS keyring, with a fallback key file in the config folder.
+- **Secrets.** API keys come from environment variables, `.env` or the keyring, are masked in logs, and are never written to configuration.
+- **Signed licenses.** Premium keys carry an Ed25519 signature. The app ships **only the public verification key**; the signing key stays with the issuer and is never part of the source or the installer.
+- **Clock checks.** The app remembers the last date it saw and refuses a clock that moves backwards. This is a best-effort measure, not protection against someone who controls the local database and system clock.
+- **Back up before wiping.** If the encryption key or the app data folder is lost, existing `.plt` documents cannot be recovered.
+- **Safe links.** Only `http`, `https` and `mailto` links open from the viewer.
 
-- Genel Google uçucu IP bazlı **429** verebilir → MyMemory'ye düşer (kelime tekil karşılıklarda kalite düşebilir). Anahtarlı sağlayıcı kullanın.
-- Ödeme akışı yerine Telegram iletişimi kullanılır. Belge paylaşma özelliği uygulamada bulunmadığı için tanıtımda vaat edilmez.
-- PDF seçimi gerçek metin katmanı olan sayfalarda çalışır; taranmış/görüntü tabanlı PDF'lere OCR uygulanmaz.
-- Reklam alanı soyutlama katmanıdır; gerçek reklam ağı bağlanmadı.
-- Çevrimdışı lisansın saat geri alma tespiti uygulama verisindeki son görülen tarihi kullanır; yerel veritabanı/sistem saati üzerinde tam kontrolü olan saldırgana karşı kesin koruma sağlamaz.
+Found a vulnerability? Please report it privately by e-mail instead of opening a public issue.
 
----
+<br>
 
-## Sorun Giderme
+## 🧰 Tech Stack
 
-- Log: `<veri dizini>/logs/paralate.log`
-- GUI açılmıyorsa (Linux ssh/headless): `QT_QPA_PLATFORM=offscreen` (bu modda pencereler görünmez, testler içindir)
-- Çeviri hiç çalışmıyorsa: `.env` anahtarlarını kontrol edin, `logs/paralate.log` içinde `fallback`/`provider` kayıtlarına bakın.
+| Layer | Technology |
+|---|---|
+| Language | Python 3.12 |
+| GUI | PyQt6 (QThread / signal model) |
+| PDF | PyMuPDF: extraction, redaction, merging, rendering |
+| Storage | SQLite (WAL, foreign keys, short-lived connections) |
+| Crypto | `cryptography`: AES-256-GCM, Ed25519 |
+| Secrets and config | `keyring`, `python-dotenv` |
+| Networking | `requests` |
+| Packaging | PyInstaller |
+| Testing | pytest |
+
+<br>
+
+## 🚧 Known Limitations
+
+- No OCR: the PDF must contain selectable text.
+- Translating needs a network connection and a working translation service. The keyless public endpoints give **no guarantee** of speed, quality, quota or availability, and a provider may reject requests.
+- Layout is rebuilt block by block. Complex columns, tables, vertical text, backgrounds and mixed fonts may not be reproduced perfectly.
+- Translated text can be longer or shorter than the original, so the renderer shrinks fonts, grows boxes and, as a last resort, trims text.
+- Color, bold and italic transfer is approximate. Highlight, underline and strike-through annotations are not re-attached to individual translated words.
+- The ad slot is only an abstraction layer. No ad network is connected.
+- The offline license cannot give cryptographic clock or revocation guarantees.
+- The installer is Windows-only and is not code-signed yet.
+
+<br>
+
+## 🩺 Troubleshooting
+
+| Symptom | What to try |
+|---|---|
+| Translation fails or is slow | Check `<data folder>/logs/paralate.log` for `provider` and `fallback` entries, verify your `.env` keys, or add a provider key to avoid public-endpoint rate limits. |
+| Windows warns about `Setup.exe` | The build is unsigned. Verify the SHA-256 hash from the release notes. |
+| GUI does not start on Linux over SSH | Use a real display. `QT_QPA_PLATFORM=offscreen` hides windows and is meant for tests. |
+| Turkish characters look wrong | A suitable system font is missing. Install `fonts-dejavu` or `fonts-liberation` on Linux. |
+
+<br>
+
+## 📜 License
+
+ParaLate's original source code is © 2026 Oğuzhan YORULMAZ / NOZ-7 Software and is released under the **[GPL-3.0-only](./LICENSE)** license.
+
+The copyright holder may separately offer a commercial or closed-source license **for ParaLate's own code only**. To discuss it, write to [yorulmazoguzhan306@gmail.com](mailto:yorulmazoguzhan306@gmail.com). That grant does not cover third-party software.
+
+The Windows build bundles third-party components under their own licenses:
+
+| Component | License |
+|---|---|
+| PyQt6 | GPL-3.0 (Riverbank also sells a separate commercial license) |
+| PyMuPDF / MuPDF | AGPL-3.0 or an Artifex commercial license |
+| Qt libraries | LGPL-3.0 and other component-specific licenses |
+| cryptography | Apache-2.0 or BSD-3-Clause |
+| requests | Apache-2.0 |
+| python-dotenv | BSD-3-Clause |
+
+An open-source distribution built with these dependencies must satisfy their terms, in particular **AGPL-3.0**. Distributing a **closed-source** build additionally requires the third-party commercial licenses, including those for PyQt6 and PyMuPDF. Each release ships the matching source snapshot, dependency pins, license texts and a package inventory. See [`installer/THIRD_PARTY_NOTICES.md`](./installer/THIRD_PARTY_NOTICES.md).
+
+*This summary is not legal advice.*
+
+<br>
+
+## 🤝 Contributing
+
+Bug reports, ideas and pull requests are welcome.
+
+1. Open an [issue](https://github.com/OWNER/ParaLate/issues) to discuss larger changes first.
+2. Fork the repository and create a feature branch.
+3. Run `python -m pytest` and make sure the suite passes.
+4. Open a pull request that explains what changed and why.
+
+Contributions are accepted under the project's GPL-3.0-only license. Never commit `.env` files, signing keys or real API keys.
+
+<br>
+
+## 💬 Contact
+
+<div align="center">
+
+<a href="mailto:yorulmazoguzhan306@gmail.com"><img alt="E-mail" src="https://img.shields.io/badge/E--mail-yorulmazoguzhan306%40gmail.com-D14836?style=for-the-badge&logo=gmail&logoColor=white"></a>
+&nbsp;
+<a href="https://t.me/NOZ_7_T"><img alt="Telegram" src="https://img.shields.io/badge/Telegram-%40NOZ__7__T-26A5E4?style=for-the-badge&logo=telegram&logoColor=white"></a>
+
+<br><br>
+
+**If ParaLate saves you time, a ⭐ on the repository helps others find it.**
+
+<sub>Made by <b>NOZ-7 Software</b> · Oğuzhan YORULMAZ · © 2026</sub>
+
+<br>
+
+<a href="#readme">↑ Back to top</a>
+
+</div>
